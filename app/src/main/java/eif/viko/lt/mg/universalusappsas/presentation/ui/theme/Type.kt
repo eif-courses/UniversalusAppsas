@@ -1,4 +1,4 @@
-package eif.viko.lt.mg.universalusappsas.ui.theme
+package eif.viko.lt.mg.universalusappsas.presentation.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

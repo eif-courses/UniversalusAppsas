@@ -1,8 +1,9 @@
-package eif.viko.lt.mg.universalusappsas
+package eif.viko.lt.mg.universalusappsas.presentation.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,18 +22,26 @@ import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import eif.viko.lt.mg.universalusappsas.ui.theme.UniversalusAppsasTheme
+import dagger.hilt.android.AndroidEntryPoint
+import eif.viko.lt.mg.universalusappsas.MenuItem
+import eif.viko.lt.mg.universalusappsas.R
+import eif.viko.lt.mg.universalusappsas.presentation.EmployeeState
+import eif.viko.lt.mg.universalusappsas.presentation.EmployeeViewModel
+import eif.viko.lt.mg.universalusappsas.presentation.ui.theme.UniversalusAppsasTheme
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: EmployeeViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.loadEmployees()
         setContent {
 
             UniversalusAppsasTheme {
@@ -86,6 +96,7 @@ class MainActivity : ComponentActivity() {
                         Modifier.padding(it),
                         navController = navController,
                     )
+                    LoadingFromApi(state = viewModel.state)
                 }
 
             }
@@ -93,27 +104,22 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun LoadingFromApi(
+    state: EmployeeState,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp)) {
+        state.employee?.employeeData?.let {
+            it.forEach { emp->
+                Text(text = "${emp.name}")
+            }
+        }
 
-//@Composable
-//fun NavigationGraph(
-//    modifier: Modifier = Modifier,
-//    navController: NavHostController = rememberNavController(),
-//    startDestination: String = Screen.HomeScreen.route
-//    ) {
-//
-//    NavHost(
-//        modifier = modifier,
-//        navController = navController,
-//        startDestination = startDestination
-//    ) {
-//        composable(route = Screen.HomeScreen.route) {
-//            HomeScreen(navController)
-//        }
-//        composable(route = Screen.DetailsScreen.route) {
-//            DetailsScreen(navController)
-//        }
-//    }
-//}
+    }
+}
 
 
 @Composable
@@ -143,6 +149,7 @@ fun MyAppNavHost(
     }
 }
 
+
 @Composable
 fun ProfileScreen(
     onNavigateToFriends: () -> Unit,
@@ -163,31 +170,9 @@ fun AnotherScreen(
     Button(onClick = onNavigateToFriends) {
         Text(text = "Kitas ekranas")
     }
+
 }
 
-//@Composable
-//fun NavigationGraph(navController: NavHostController) {
-//    NavHost(navController, startDestination = BottomNavItem.Home.screen_route) {
-//        composable(BottomNavItem.Home.screen_route) {
-//            HomeScreen()
-//        }
-//        composable(BottomNavItem.MyNetwork.screen_route) {
-//            NetworkScreen()
-//        }
-//        composable(BottomNavItem.AddPost.screen_route) {
-//            AddPostScreen()
-//        }
-//        composable(BottomNavItem.Notification.screen_route) {
-//            NotificationScreen()
-//        }
-//        composable(BottomNavItem.Jobs.screen_route) {
-//            JobScreen()
-//        }
-//    }
-//}
-
-
-//@Preview
 @Composable
 fun AppBar(
     onNavigationIconClick: () -> Unit
@@ -262,37 +247,32 @@ fun DrawerBody(
 @Composable
 fun DefaultPreview() {
 
-    val dummyData = listOf(
-        MenuItem(
-            "1",
-            "Pirmas",
-            "Aprasymas",
-            Icons.Default.ThumbUp
-        ),
-        MenuItem(
-            "2",
-            "Antras",
-            "Aprasymas",
-            Icons.Default.ThumbUp
-        ),
-        MenuItem(
-            "2",
-            "Trecias",
-            "Aprasymas",
-            Icons.Default.ThumbUp
-        ),
-        MenuItem(
-            "2",
-            "Ketvirtas",
-            "Aprasymas",
-            Icons.Default.ThumbUp
-        )
-    )
-
     UniversalusAppsasTheme {
+        val dummyList = listOf(
+            MenuItem(
+                "add",
+                "Add",
+                "prideti",
+                Icons.Default.Add
+            ),
+            MenuItem(
+                "create",
+                "Create",
+                "Sukurti",
+                Icons.Default.Create
+            ),
+            MenuItem(
+                "delete",
+                "Delete",
+                "Istrinti",
+                Icons.Default.Delete
+            )
+        )
+        val navController = rememberNavController()
         val scaffoldState = rememberScaffoldState()
         val scope = rememberCoroutineScope()
         Scaffold(
+            scaffoldState = scaffoldState,
             topBar = {
                 AppBar(
                     onNavigationIconClick = {
@@ -303,13 +283,22 @@ fun DefaultPreview() {
                 )
 
             },
+            drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
             drawerContent = {
+
                 DrawerHeader()
-                DrawerBody(items = dummyData, onItemClick = {
+                DrawerBody(items = dummyList, onItemClick = {
                     println("Clicked on ${it.title}")
+                    navController.navigate("profile")
+                    scope.launch {
+                        scaffoldState.drawerState.close()
+                    }
                 })
             }) {
-            Box(modifier = Modifier.padding(it))
+            MyAppNavHost(
+                Modifier.padding(it),
+                navController = navController,
+            )
         }
 
     }
