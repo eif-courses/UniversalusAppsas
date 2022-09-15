@@ -1,4 +1,4 @@
-package eif.viko.lt.mg.universalusappsas.presentation
+package eif.viko.lt.mg.universalusappsas.presentation.ui.employee
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +26,7 @@ class EmployeeViewModel @Inject constructor(
             state = state.copy(
                 isLoading = true,
                 error = null,
-                employee = result.data
+                employees = result.data ?: emptyList(),
             )
         }
     }

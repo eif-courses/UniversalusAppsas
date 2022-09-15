@@ -1,4 +1,4 @@
-package eif.viko.lt.mg.universalusappsas
+package eif.viko.lt.mg.universalusappsas.presentation.ui.components.layout
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

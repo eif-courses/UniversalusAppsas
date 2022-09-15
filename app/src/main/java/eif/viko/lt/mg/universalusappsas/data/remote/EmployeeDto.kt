@@ -1,15 +1,18 @@
 package eif.viko.lt.mg.universalusappsas.data.remote
 
-import com.squareup.moshi.Json
+import eif.viko.lt.mg.universalusappsas.domain.model.Employee
 
-
-data class Employee(
+data class EmployeeDto(
     val address: String = "",
     val age: Int = 0,
     val name: String = "",
-)
-
-data class EmployeeDto(
-    @field:Json(name = "employees")
-    val employeeData: List<Employee>
-)
+){
+    // Galima pasirinkti mažiau parametrų ir Employee klasėje nurodyti pvz. tik age, kurį atvaizduosime UI
+    fun toEmployee(): Employee{
+        return Employee(
+            address = address,
+            age = age,
+            name = name
+        )
+    }
+}
