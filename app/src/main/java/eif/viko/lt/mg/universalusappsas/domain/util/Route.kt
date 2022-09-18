@@ -1,7 +1,6 @@
 package eif.viko.lt.mg.universalusappsas.domain.util
 
 object Route {
-    const val EMPLOYEE = "employee"
-    const val HOME = "home"
-    const val EMPLOYEE_DETAILS = "details"
+    const val FUTURAMA_CHARACTERS_SCREEN = "characters"
+    const val FUTURAMA_CHARACTER_DETAILS = "details"
 }

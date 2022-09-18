@@ -1,25 +1,25 @@
-package eif.viko.lt.mg.universalusappsas.presentation.ui.employee.components
+package eif.viko.lt.mg.universalusappsas.presentation.ui.futurama.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import eif.viko.lt.mg.universalusappsas.domain.model.Employee
+import coil.compose.AsyncImage
+import eif.viko.lt.mg.universalusappsas.domain.model.Futurama
 
 @Composable
 fun ListItem(modifier: Modifier = Modifier,
-             items: List<Employee>,
+             items: List<Futurama>,
              itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
-             onItemClick: (Employee) -> Unit) {
+             onItemClick: (Futurama) -> Unit) {
     LazyColumn(modifier) {
         items(items) { item ->
             Row(
@@ -30,23 +30,20 @@ fun ListItem(modifier: Modifier = Modifier,
                     }
                     .padding(16.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = item.address
+
+                AsyncImage(
+                    modifier = Modifier.width(64.dp),
+                    model = item.PicUrl,
+                    contentDescription = item.Name,
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
-                    text = item.name,
-                    style = itemTextStyle,
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    text = item.address,
+                    text = item.Name,
                     style = itemTextStyle,
                     modifier = Modifier.weight(1f)
                 )
             }
+            Divider()
         }
     }
 }
