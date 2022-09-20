@@ -8,8 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eif.viko.lt.mg.universalusappsas.domain.use_case.futurama_use_case.GetFuturamaCharactersUseCase
 import eif.viko.lt.mg.universalusappsas.domain.util.Resource
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +19,13 @@ class FuturamaViewModel @Inject constructor(
     var state by mutableStateOf(FuturamaState())
         private set
 
+    private val _eventFlow = MutableSharedFlow<UIEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
+    sealed class UIEvent{
+        data class ShowSnackbar(val message: String): UIEvent()
+    }
+
     init {
         getCharacters()
     }
@@ -28,10 +34,23 @@ class FuturamaViewModel @Inject constructor(
         getFuturamaCharactersUseCase().onEach { result ->
             state = when(result){
                 is Resource.Success -> {
-                    state.copy(characters = result.data ?: emptyList())
+                    state.copy(
+                        characters = result.data ?: emptyList(),
+                        isLoading = false
+                    )
                 }
                 is Resource.Error -> {
-                    state.copy(error = result.message ?: "An unexpected error occurred!")
+                    state.copy(
+                        characters = result.data ?: emptyList(),
+                        isLoading = false
+                    )
+                    //_eventFlow.emit(UIEvent.ShowSnackbar("awe"))
+                }
+                is Resource.Loading -> {
+                    state.copy(
+                        characters = result.data ?: emptyList(),
+                        isLoading = true
+                    )
                 }
             }
 

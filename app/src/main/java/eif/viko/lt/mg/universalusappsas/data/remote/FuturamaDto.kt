@@ -1,5 +1,6 @@
 package eif.viko.lt.mg.universalusappsas.data.remote
 
+import eif.viko.lt.mg.universalusappsas.data.local.FuturamaEntity
 import eif.viko.lt.mg.universalusappsas.domain.model.Futurama
 
 data class FuturamaDto(
@@ -14,8 +15,8 @@ data class FuturamaDto(
     val Status: String,
     val VoicedBy: String
 ){
-    fun toFuturama(): Futurama {
-        return Futurama(
+    fun toFuturamaEntity(): FuturamaEntity {
+        return FuturamaEntity(
             Name = Name,
             PicUrl = PicUrl,
             Profession = Profession

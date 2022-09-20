@@ -1,10 +1,15 @@
 package eif.viko.lt.mg.universalusappsas.di
 
+import android.app.Application
+import android.provider.DocumentsContract.Root
+import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import eif.viko.lt.mg.universalusappsas.data.FuturamaApi
+import eif.viko.lt.mg.universalusappsas.data.local.FuturamaDao
+import eif.viko.lt.mg.universalusappsas.data.local.FuturamaDatabase
+import eif.viko.lt.mg.universalusappsas.data.remote.FuturamaApi
 import eif.viko.lt.mg.universalusappsas.data.repository.FuturamaRepositoryImpl
 import eif.viko.lt.mg.universalusappsas.domain.repository.FuturamaRepository
 
@@ -27,18 +32,31 @@ object AppModule {
             .build()
             .create(FuturamaApi::class.java)
     }
-    @Provides
-    @Singleton
-    fun provideFuturamaRepository(api: FuturamaApi): FuturamaRepository{
-        return FuturamaRepositoryImpl(api)
-    }
 
     @Provides
     @Singleton
-    fun provideFuturamaUseCases(repository: FuturamaRepository): FuturamaUseCases{
+    fun provideFuturamaRepository(
+        api: FuturamaApi,
+        db: FuturamaDatabase
+    ): FuturamaRepository {
+        return FuturamaRepositoryImpl(api, db.dao)
+    }
+    @Provides
+    @Singleton
+    fun provideCharactersDatabase(app: Application): FuturamaDatabase{
+        return Room.databaseBuilder(
+            app,
+            FuturamaDatabase::class.java,
+            "characters_db"
+        ).build()
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideFuturamaUseCases(repository: FuturamaRepository): FuturamaUseCases {
         return FuturamaUseCases(
             getFuturamaCharactersUseCase = GetFuturamaCharactersUseCase(repository)
         )
     }
-
 }
