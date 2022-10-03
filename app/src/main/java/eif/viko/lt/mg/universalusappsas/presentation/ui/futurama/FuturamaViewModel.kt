@@ -22,17 +22,17 @@ class FuturamaViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UIEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    sealed class UIEvent{
-        data class ShowSnackbar(val message: String): UIEvent()
+    sealed class UIEvent {
+        data class ShowSnackbar(val message: String) : UIEvent()
     }
 
     init {
         getCharacters()
     }
 
-    private fun getCharacters(){
+    private fun getCharacters() {
         getFuturamaCharactersUseCase().onEach { result ->
-            state = when(result){
+            state = when (result) {
                 is Resource.Success -> {
                     state.copy(
                         characters = result.data ?: emptyList(),

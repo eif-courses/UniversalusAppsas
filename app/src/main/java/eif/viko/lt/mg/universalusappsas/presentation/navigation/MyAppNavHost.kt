@@ -1,4 +1,4 @@
-package eif.viko.lt.mg.universalusappsas.presentation.ui.components.layout
+package eif.viko.lt.mg.universalusappsas.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import eif.viko.lt.mg.universalusappsas.domain.util.Route
 import eif.viko.lt.mg.universalusappsas.presentation.ui.futurama.FuturamaDetailsScreen
 import eif.viko.lt.mg.universalusappsas.presentation.ui.futurama.FuturamaScreen
+import eif.viko.lt.mg.universalusappsas.presentation.ui.youtubevideo.VideoScreen
 
 @Composable
 fun MyAppNavHost(
@@ -26,8 +27,11 @@ fun MyAppNavHost(
         composable(route = Route.FUTURAMA_CHARACTERS_SCREEN) {
             FuturamaScreen(navController = navController)
         }
+        composable(route = Route.FUTURAMA_VIDEOS_SCREEN){
+            VideoScreen(navController = navController)
+        }
         composable(
-            route = "details/{profession}/{imageUrl}/{name}",
+            route = "${Route.FUTURAMA_CHARACTER_DETAILS}/{profession}/{imageUrl}/{name}",
             arguments = listOf(
                 navArgument("profession") { type = NavType.StringType },
                 navArgument("imageUrl") { type = NavType.StringType },
