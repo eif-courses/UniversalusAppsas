@@ -45,6 +45,12 @@ class MainActivity : ComponentActivity() {
                         "Videos",
                         "videos",
                         Icons.Default.PlayArrow
+                    ),
+                    MenuItem(
+                        Route.FUTURAMA_AUTHENTICATION_SCREEN,
+                        "Sign In",
+                        "sign in",
+                        Icons.Default.Lock
                     )
                 )
                 val navController = rememberNavController()

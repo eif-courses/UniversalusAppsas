@@ -1,4 +1,4 @@
-package eif.viko.lt.mg.universalusappsas.domain.use_case.firebase_use_case
+package eif.viko.lt.mg.universalusappsas.domain.use_case.firestore_use_case
 
 import eif.viko.lt.mg.universalusappsas.domain.model.Video
 import eif.viko.lt.mg.universalusappsas.domain.repository.FirebaseRepository
@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetYoutubeVideosUseCase @Inject constructor(
     private val repository: FirebaseRepository
 ) {
-    operator fun invoke(): Flow<List<Video>> {
+    operator fun invoke(): Flow<List<Video>>{
         return repository.getVideos()
     }
 }

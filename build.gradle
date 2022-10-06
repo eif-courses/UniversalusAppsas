@@ -1,6 +1,7 @@
 buildscript {
     ext {
         compose_version = '1.2.1'
+        firebase_bom_version = '30.5.0'
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10"

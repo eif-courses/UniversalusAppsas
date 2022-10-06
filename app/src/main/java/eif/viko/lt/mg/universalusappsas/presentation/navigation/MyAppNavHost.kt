@@ -9,9 +9,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import eif.viko.lt.mg.universalusappsas.domain.util.Route
+import eif.viko.lt.mg.universalusappsas.presentation.ui.firebaseAuth.FirebaseAuthenticationScreen
 import eif.viko.lt.mg.universalusappsas.presentation.ui.futurama.FuturamaDetailsScreen
 import eif.viko.lt.mg.universalusappsas.presentation.ui.futurama.FuturamaScreen
-import eif.viko.lt.mg.universalusappsas.presentation.ui.youtubevideo.VideoScreen
+import eif.viko.lt.mg.universalusappsas.presentation.ui.youtubevideos.YoutubeVideoScreen
 
 @Composable
 fun MyAppNavHost(
@@ -27,21 +28,29 @@ fun MyAppNavHost(
         composable(route = Route.FUTURAMA_CHARACTERS_SCREEN) {
             FuturamaScreen(navController = navController)
         }
-        composable(route = Route.FUTURAMA_VIDEOS_SCREEN){
-            VideoScreen(navController = navController)
+        composable(route = Route.FUTURAMA_VIDEOS_SCREEN) {
+            YoutubeVideoScreen(navController = navController)
         }
+        composable(route = Route.FUTURAMA_AUTHENTICATION_SCREEN) {
+            FirebaseAuthenticationScreen(navigateToProfileScreen = {
+                navController.popBackStack()
+            })
+        }
+
+
         composable(
             route = "${Route.FUTURAMA_CHARACTER_DETAILS}/{profession}/{imageUrl}/{name}",
             arguments = listOf(
                 navArgument("profession") { type = NavType.StringType },
                 navArgument("imageUrl") { type = NavType.StringType },
                 navArgument("name") { type = NavType.StringType }
-            )) {backStackEntry ->
+            )) { backStackEntry ->
             FuturamaDetailsScreen(
                 navController = navController,
                 profession = backStackEntry.arguments?.getString("profession"),
                 imageUrl = backStackEntry.arguments?.getString("imageUrl"),
-                name = backStackEntry.arguments?.getString("name"))
+                name = backStackEntry.arguments?.getString("name")
+            )
         }
     }
 }
